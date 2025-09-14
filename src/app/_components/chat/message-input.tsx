@@ -45,7 +45,7 @@ export function MessageInput({
   }, [message]);
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-3 items-end">
+    <form onSubmit={handleSubmit} className="flex gap-2 sm:gap-3 items-end">
       <div className="flex-1 relative">
         <textarea
           ref={textareaRef}
@@ -54,17 +54,17 @@ export function MessageInput({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           disabled={disabled}
-          className="w-full px-4 py-3   rounded-xl resize-none focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent text-gray-100 placeholder-gray-400"
+          className="w-full px-3 sm:px-4 py-2 sm:py-3 rounded-xl resize-none focus:outline-none  focus:border-transparent text-[var(--text-primary)] placeholder-[var(--text-tertiary)] text-sm sm:text-base scrollbar-hide"
           rows={1}
-          style={{ minHeight: "48px", maxHeight: "160px" }}
+          style={{ minHeight: "40px", maxHeight: "160px" }}
         />
       </div>
       <button
         type="submit"
         disabled={!message.trim() || disabled}
-        className="flex items-center justify-center w-12 h-12 bg-gradient-to-tr from-[#6b5cf6] to-[#4f46e5] text-white rounded-xl shadow-lg hover:brightness-105 transition disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-r from-[var(--primary-gradient-start)] to-[var(--primary-gradient-end)] text-white rounded-xl shadow-lg hover:brightness-105 transition disabled:opacity-50 disabled:cursor-not-allowed flex-shrink-0"
       >
-        <PaperAirplaneIcon className="w-5 h-5 " />
+        <PaperAirplaneIcon className="w-4 h-4 sm:w-5 sm:h-5" />
       </button>
     </form>
   );

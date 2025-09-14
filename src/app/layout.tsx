@@ -4,6 +4,7 @@ import { type Metadata } from "next";
 import { Geist } from "next/font/google";
 import { TRPCReactProvider } from "@/trpc/react";
 import { ClientProviders } from "./client-providers";
+import { ThemeProvider } from "@/lib/theme-provider";
 
 export const metadata: Metadata = {
   title: "Career Counselor AI",
@@ -22,9 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${geist.variable}`}>
       <body>
-        <ClientProviders>
-          <TRPCReactProvider>{children}</TRPCReactProvider>
-        </ClientProviders>
+        <ThemeProvider defaultTheme="light" storageKey="career-ai-theme">
+          <ClientProviders>
+            <TRPCReactProvider>{children}</TRPCReactProvider>
+          </ClientProviders>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -2,6 +2,7 @@
 
 import { signIn, signOut, useSession } from "next-auth/react";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
+import Image from "next/image";
 
 export function AuthButton() {
   const { data: session, status } = useSession();
@@ -20,16 +21,18 @@ export function AuthButton() {
       <div className="flex items-center space-x-4 px-4 py-2">
         <div className="flex items-center space-x-2">
           {session.user?.image ? (
-            <img
+            <Image
               src={session.user.image}
-              alt={session.user.name || "User"}
+              alt={session.user.name ?? "User"}
+              width={32}
+              height={32}
               className="w-8 h-8 rounded-full"
             />
           ) : (
             <UserCircleIcon className="w-8 h-8 text-gray-600" />
           )}
           <span className="text-sm font-medium">
-            {session.user?.name || session.user?.email}
+            {session.user?.name ?? session.user?.email}
           </span>
         </div>
         <button

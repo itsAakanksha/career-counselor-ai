@@ -1,6 +1,7 @@
 "use client";
 
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { useState } from "react";
+import { PlusIcon, MagnifyingGlassIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { formatDistanceToNow } from "date-fns";
 
 interface ChatSession {
@@ -27,26 +28,44 @@ export function ChatSessionList({
   onNewSession,
   isLoading,
 }: ChatSessionListProps) {
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Filter sessions based on search query
+  const filteredSessions = sessions.filter((session) =>
+    session.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
   return (
-    <div className="flex-1 h-full overflow-y-auto bg-gradient-to-br from-[#060417] via-[#0f0720] to-[#22123a] text-gray-200">
+    <div className="flex-1 h-full overflow-y-auto bg-gradient-to-br from-[var(--bg-gradient-start)] via-[var(--bg-gradient-via)] to-[var(--bg-gradient-end)] text-gray-200 scrollbar-hide">
       {/* Header */}
-      <div className="p-4 border-b border-black/20">
-        <h2 className="text-xl font-bold text-white">Chat History</h2>
-        <p className="text-xs text-gray-400">Your recent career conversations</p>
+      <div className="p-4 border-b border-[var(--border-primary)]">
+        <h2 className="text-xl font-bold text-[var(--text-primary)]">Chat History</h2>
+        <p className="text-xs text-[var(--text-tertiary)]">Your recent career conversations</p>
       </div>
 
       {/* Search / New chat */}
       <div className="p-4 space-y-3">
         <div className="relative">
+          <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)]" />
           <input
-            placeholder="Search"
-            className="w-full bg-[#0b1220] border border-black/30 placeholder-gray-500 text-sm px-3 py-2 rounded-full"
+            type="text"
+            placeholder="Search conversations..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full bg-white dark:bg-[var(--dark-bg)] border border-[var(--border-primary)] placeholder-[var(--text-tertiary)] text-[var(--text-primary)] text-sm pl-10 pr-10 py-2 rounded-full focus:outline-none focus:ring-2 focus:ring-[var(--primary-gradient-end)] transition-colors"
           />
+          {searchQuery && (
+            <button
+              onClick={() => setSearchQuery("")}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
+            >
+              <XMarkIcon className="w-4 h-4" />
+            </button>
+          )}
         </div>
 
         <button
           onClick={onNewSession}
-          className="w-full flex items-center gap-2 justify-center py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full text-sm font-medium shadow-md"
+          className="w-full flex items-center gap-2 justify-center py-2 bg-gradient-to-r from-[var(--primary-gradient-start)] to-[var(--primary-gradient-end)] hover:brightness-110 text-white rounded-full text-sm font-medium shadow-md transition-all duration-200"
         >
           <PlusIcon className="w-4 h-4" />
           New Chat
@@ -57,38 +76,49 @@ export function ChatSessionList({
       <div className="px-3 pb-4 space-y-2">
         {isLoading ? (
           <div className="space-y-2">
-            {[...Array(4)].map((_, i) => (
-              <div key={i} className="animate-pulse h-12 bg-black/20 rounded-lg"></div>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="animate-pulse h-12 bg-[var(--surface-secondary)] rounded-lg"></div>
             ))}
           </div>
-        ) : sessions.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            <p>No chats yet</p>
-            <p className="text-sm">Start a new conversation</p>
+        ) : filteredSessions.length === 0 ? (
+          <div className="text-center py-8 text-[var(--text-tertiary)]">
+            {searchQuery ? (
+              <>
+                <p>No conversations found</p>
+                <p className="text-sm">Try a different search term</p>
+              </>
+            ) : (
+              <>
+                <p>No chats yet</p>
+                <p className="text-sm">Start a new conversation</p>
+              </>
+            )}
           </div>
         ) : (
           <div className="space-y-2">
-            {sessions.map((session) => (
+            {filteredSessions.map((session) => (
               <button
                 key={session.id}
                 onClick={() => onSelectSession(session.id)}
-                className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all duration-150 ${
+                className={`w-full text-left p-3 rounded-xl transition-all duration-150 ${
                   selectedSessionId === session.id
-                    ? "bg-gradient-to-r from-[#2b1055] to-[#4b1fbf] shadow-lg"
-                    : "hover:bg-white/5"
+                    ? "bg-gradient-to-r from-[var(--primary-gradient-start)] to-[var(--primary-gradient-end)] shadow-lg"
+                    : "hover:bg-[var(--bg-gradient-end)]"
                 }`}
               >
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#3b2a6f] to-[#6b4be0] flex items-center justify-center text-sm font-semibold">
-                  {session.title.charAt(0).toUpperCase()}
-                </div>
-                <div className="flex-1 min-w-0">
+                <div className="flex flex-col gap-2">
+                  <h3 className="font-medium truncate text-[var(--text-primary)]">{session.title}</h3>
                   <div className="flex items-center justify-between">
-                    <h3 className="font-medium truncate">{session.title}</h3>
-                    <span className="text-xs text-gray-300 ml-2">
+                    <span className="text-xs text-[var(--text-secondary)] truncate flex-1 mr-2">
+                      {session._count.messages > 0
+                        ? `${session._count.messages} message${session._count.messages === 1 ? '' : 's'}`
+                        : "No messages yet"
+                      }
+                    </span>
+                    <span className="text-xs text-[var(--text-tertiary)] whitespace-nowrap">
                       {formatDistanceToNow(session.lastMessageAt, { addSuffix: true })}
                     </span>
                   </div>
-                  <p className="text-xs text-gray-400">{session._count.messages} messages</p>
                 </div>
               </button>
             ))}

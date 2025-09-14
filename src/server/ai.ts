@@ -1,5 +1,18 @@
 import { env } from "@/env";
 
+interface EuronAPIResponse {
+  choices?: Array<{
+    message?: {
+      content?: string;
+    };
+    finish_reason?: string;
+  }>;
+  model?: string;
+  usage?: {
+    total_tokens?: number;
+  };
+}
+
 export interface AIResponse {
   content: string;
   metadata: {
@@ -60,7 +73,7 @@ Always maintain a professional, helpful tone and focus on empowering the user to
       throw new Error(`Euron API error: ${response.status} ${response.statusText}`);
     }
 
-    const data = await response.json();
+    const data = await response.json() as EuronAPIResponse;
 
     const aiContent = data.choices?.[0]?.message?.content;
     if (!aiContent) {
@@ -70,9 +83,9 @@ Always maintain a professional, helpful tone and focus on empowering the user to
     return {
       content: aiContent,
       metadata: {
-        model: data.model || "gpt-4.1-nano",
-        tokens: data.usage?.total_tokens || 0,
-        finishReason: data.choices?.[0]?.finish_reason || "unknown",
+        model: data.model ?? "gpt-4.1-nano",
+        tokens: data.usage?.total_tokens ?? 0,
+        finishReason: data.choices?.[0]?.finish_reason ?? "unknown",
       },
     };
   } catch (error) {

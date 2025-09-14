@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { api } from "@/trpc/react";
 import { MessageList } from "./message-list";
@@ -10,9 +10,10 @@ import { EmptyState } from "./empty-state";
 interface ChatInterfaceProps {
   sessionId: string | null;
   onSessionCreated: (sessionId: string) => void;
+  sidebarOpen?: boolean;
 }
 
-export function ChatInterface({ sessionId, onSessionCreated }: ChatInterfaceProps) {
+export function ChatInterface({ sessionId, onSessionCreated, sidebarOpen = true }: ChatInterfaceProps) {
   const [newSessionTitle, setNewSessionTitle] = useState("");
   const queryClient = useQueryClient();
 
@@ -24,15 +25,15 @@ export function ChatInterface({ sessionId, onSessionCreated }: ChatInterfaceProp
 
   // Mutations
   const createSession = api.chat.createSession.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       // Invalidate sessions query to refresh the list
-      queryClient.invalidateQueries({ queryKey: [["chat", "getSessions"]] });
+      await queryClient.invalidateQueries({ queryKey: [["chat", "getSessions"]] });
     },
   });
   const sendMessage = api.ai.sendMessage.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       // Refetch session data to show new messages
-      refetchSession();
+      await refetchSession();
     },
   });
 
@@ -40,12 +41,12 @@ export function ChatInterface({ sessionId, onSessionCreated }: ChatInterfaceProp
     if (!sessionId) {
       // Create new session first
       if (!newSessionTitle.trim()) {
-        setNewSessionTitle(`Career Chat ${new Date().toLocaleDateString()}`);
+        setNewSessionTitle(`Career Chat `);
       }
 
       try {
         const newSession = await createSession.mutateAsync({
-          title: newSessionTitle || `Career Chat ${new Date().toLocaleDateString()}`,
+          title: newSessionTitle || `Career Chat `,
         });
         onSessionCreated(newSession.id);
 
@@ -72,30 +73,27 @@ export function ChatInterface({ sessionId, onSessionCreated }: ChatInterfaceProp
 
   if (sessionLoading) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-gradient-to-b from-[#020617] to-[#071024]">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-purple-500 border-transparent rounded-full"></div>
+      <div className="flex-1 flex items-center justify-center bg-gradient-to-b from-[var(--bg-gradient-start)] to-[var(--bg-gradient-via)]">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-4 border-[var(--primary-gradient-end)] border-transparent rounded-full"></div>
       </div>
     );
   }
 
   if (!sessionId) {
     return (
-      <div className="h-screen flex flex-col bg-gradient-to-b from-[#020617] to-[#071024] min-h-0 relative">
-        {/* <div className="p-10 border-b border-white/6 flex-shrink-0">
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">Career Counselor AI</h1>
-          <p className="mt-3 text-gray-400 max-w-2xl">Your personal AI career advisor — thoughtful, practical, and focused on helping you grow professionally.</p>
+      <div className="h-screen flex flex-col  min-h-0 relative">
+        <div className="flex-1 overflow-auto bg-gradient-to-br from-[var(--bg-gradient-start)] via-[var(--bg-gradient-via)] to-[var(--bg-gradient-end)]  p-8 pb-32 scrollbar-hide">
+          <div className="w-full max-w-5xl bg-gradient-to-br from-white/4 to-transparent border border-white/6 rounded-3xl shadow-2xl p-8 backdrop-blur-md ">
+            <EmptyState />
+          </div>
         </div>
 
-        <div className="flex-1 overflow-auto p-8 pb-32">
-          <div className="w-full max-w-5xl bg-gradient-to-br from-white/4 to-transparent border border-white/6 rounded-3xl shadow-2xl p-8 backdrop-blur-md">
-            <EmptyState onNewChat={handleNewChat} />
-          </div>
-        </div> */}
-
-  <div className="fixed bottom-0 left-0 md:left-80 right-0 z-50 border-t border-white/6 shadow-lg">
-          <div className="p-6">
-            <div className="max-w-5xl mx-auto">
-              <div className="bg-[rgba(12,8,30,0.6)] rounded-xl p-4 shadow-lg">
+        <div className={`fixed bottom-0 left-0 z-40 shadow-lg ${
+          sidebarOpen ? 'md:left-80 right-0' : 'right-0'
+        }`}>
+          <div className="p-3 sm:p-4 md:p-6">
+            <div className="max-w-full sm:max-w-2xl md:max-w-4xl lg:max-w-5xl mx-auto">
+              <div className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-md rounded-xl p-3 sm:p-4 shadow-lg border border-white/10">
                 <MessageInput
                   onSendMessage={handleSendMessage}
                   placeholder="Start a conversation with your career counselor..."
@@ -111,13 +109,12 @@ export function ChatInterface({ sessionId, onSessionCreated }: ChatInterfaceProp
   
 
   return (
-    <div className="h-screen flex flex-col bg-gradient-to-br from-[#060417] via-[#0f0720] to-[#22123a] min-h-0 relative">
-      {/* Messages area with bottom padding for fixed input */}
-      <div className="flex-1 overflow-auto p-6 pb-40 min-h-0">
-        <div className="max-w-5xl mx-auto h-full">
-          <div className="bg-gradient-to-br from-white/3 to-transparent border border-white/6 rounded-3xl p-6 backdrop-blur-md shadow-2xl min-h-[50vh] flex flex-col h-full min-h-0">
+    <div className="h-screen flex flex-col bg-gradient-to-br from-[var(--bg-gradient-start)] via-[var(--bg-gradient-via)] to-[var(--bg-gradient-end)] min-h-0 relative">
+      <div className="flex-1 overflow-auto p-3 sm:p-4 md:p-6 pb-32 sm:pb-36 md:pb-40 min-h-0 scrollbar-hide">
+        <div className="max-w-full sm:max-w-2xl md:max-w-4xl lg:max-w-5xl mx-auto h-full">
+          <div className="bg-gradient-to-br from-white/5 to-white/2 border border-[var(--border-primary)] rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-6 backdrop-blur-md shadow-2xl min-h-[50vh] flex flex-col h-full min-h-0">
             <MessageList
-              messages={session?.messages || []}
+              messages={session?.messages ?? []}
               isLoading={sendMessage.isPending}
             />
           </div>
@@ -125,13 +122,15 @@ export function ChatInterface({ sessionId, onSessionCreated }: ChatInterfaceProp
       </div>
 
       {/* Fixed input area at bottom with proper z-index and background */}
-      <div className="fixed bottom-0 left-0 md:left-80 right-0 z-50  shadow-lg">
-        <div className="p-6">
-          <div className="max-w-5xl mx-auto">
-            <div className="bg-[rgba(12,8,30)] rounded-xl p-4 shadow-lg">
+      <div className={`fixed bottom-0 left-0 z-40   ${
+        sidebarOpen ? 'md:left-80 right-0' : 'right-0'
+      }`}>
+        <div className="p-3 sm:p-4 md:p-6">
+          <div className="max-w-full sm:max-w-2xl md:max-w-4xl lg:max-w-5xl mx-auto">
+            <div className="bg-gradient-to-br from-white/5 to-white/2 rounded-xl p-3 sm:p-4 shadow-lg border">
               <MessageInput
                 onSendMessage={handleSendMessage}
-                placeholder="Ask your career counselor anything..."
+                placeholder="Ask your career counselors anything..."
                 disabled={sendMessage.isPending}
               />
             </div>

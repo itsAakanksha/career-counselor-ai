@@ -1,57 +1,89 @@
-# Career Counselor AI
+# Career Counselor Chat App
 
-A modern AI-powered career counseling chat application built with Next.js, TypeScript, tRPC, and Euron API.
+A modern AI-powered career counseling chat application built with Next.js, TypeScript, and tRPC.
 
-## Features
+## 🚀 Features
 
-- 🤖 AI-powered career counseling with GPT-4.1-nano
-- 💬 Real-time chat interface with message history
-- 👤 User authentication via Discord
-- 📱 Responsive design for mobile and desktop
-- 🔄 Session management with conversation persistence
-- ⚡ Fast and optimized with TanStack Query
+- 🤖 **AI Career Counseling**: Get personalized career advice from an AI counselor
+- 💬 **Chat Sessions**: Create, manage, and continue multiple chat sessions
+- � **Message Persistence**: All conversations are saved and searchable
+- 📱 **Responsive Design**: Works seamlessly on desktop and mobile
+- ⚡ **Real-time Chat**: Live typing indicators and instant responses
+- 🔐 **Authentication**: Secure user accounts with session management
 
-## Tech Stack
+## 🛠 Tech Stack
 
-- **Frontend**: Next.js 15, React 19, TypeScript, Tailwind CSS
-- **Backend**: tRPC, NextAuth.js
-- **Database**: PostgreSQL with Prisma ORM
-- **AI**: Euron API (GPT-4.1-nano)
-- **Styling**: Tailwind CSS with Heroicons
+- **Frontend**: Next.js 14, TypeScript, Tailwind CSS
+- **Backend**: tRPC, PostgreSQL, Drizzle ORM
+- **AI**: OpenAI API / Together.ai
+- **Auth**: NextAuth.js
+- **State**: TanStack Query
 
-## Getting Started
+## 📦 Installation
 
-### Prerequisites
-
-- Node.js 18+
-- PostgreSQL database
-- Discord Developer Application
-- Euron API token
-
-### 1. Clone and Install
+### Clone the repository
 
 ```bash
-git clone <your-repo-url>
-cd career-ai
+git clone https://github.com/yourusername/career-counselor-chat.git
+cd career-counselor-chat
+```
+
+### Install dependencies
+
+```bash
 npm install
 ```
 
-### 2. Environment Setup
-
-Copy the example environment file and fill in your values:
+### Environment setup
 
 ```bash
-cp .env.example .env
+cp .env.example .env.local
 ```
 
-Fill in the following environment variables:
+Fill in your environment variables:
 
-#### Discord Setup
-1. Go to [Discord Developer Portal](https://discord.com/developers/applications)
-2. Create a new application
-3. Go to "OAuth2" → "General"
-4. Copy the Client ID and Client Secret
-5. Add them to your `.env` file
+```env
+DATABASE_URL="postgresql://username:password@localhost:5432/career_chat"
+NEXTAUTH_SECRET="your-secret-key"
+NEXTAUTH_URL="http://localhost:3000"
+EURON_API_KEY="your-euron-key"
+```
+
+### Database setup
+
+```bash
+npm run db:push
+npm run db:seed
+```
+
+### Run the development server
+
+```bash
+npm run dev
+```
+
+Visit [http://localhost:3000](http://localhost:3000) to see the app.
+
+## 📱 Screenshots
+
+![alt text](image.png)
+![alt text](image-1.png)
+
+
+
+## 🚦 Scripts
+
+```bash
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run start        # Start production server
+npm run db:push      # Push database schema
+npm run db:studio    # Open database studio
+npm run lint         # Run ESLint
+npm run type-check   # TypeScript validation
+```
+
+
 
 #### Euron API Setup
 1. Go to [Euron Platform](https://euron.one)
@@ -128,14 +160,6 @@ src/
 ## Database Schema
 
 ```sql
--- Users table
-users {
-  id: uuid (PK)
-  email: string (unique)
-  name: string
-  created_at: timestamp
-  updated_at: timestamp
-}
 
 -- Chat sessions table
 chat_sessions {
@@ -158,30 +182,3 @@ messages {
   metadata: jsonb
 }
 ```
-
-## Deployment
-
-### Vercel Deployment
-
-1. Connect your GitHub repository to Vercel
-2. Add environment variables in Vercel dashboard
-3. Deploy!
-
-### Database for Production
-
-Consider using:
-- **Neon** (Serverless PostgreSQL)
-- **Supabase** (PostgreSQL with additional features)
-- **PlanetScale** (MySQL-compatible)
-
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Test thoroughly
-5. Submit a pull request
-
-## License
-
-MIT License - see LICENSE file for details

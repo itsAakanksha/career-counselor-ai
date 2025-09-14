@@ -1,8 +1,25 @@
 import { useState, useCallback } from "react";
 import { api } from "@/trpc/react";
 
+type Message = {
+  id: string;
+  chatSessionId: string;
+  content: string;
+  role: "user" | "assistant";
+  createdAt: Date;
+  metadata?: unknown;
+};
+
+type OptimisticMessage = {
+  id: string;
+  content: string;
+  role: "user" | "assistant";
+  createdAt: Date;
+  chatSessionId: string;
+};
+
 export function useChatSession(sessionId?: string) {
-  const [optimisticMessages, setOptimisticMessages] = useState<any[]>([]);
+  const [optimisticMessages, setOptimisticMessages] = useState<OptimisticMessage[]>([]);
 
   // TanStack Query for data fetching
   const { data: session, isLoading: sessionLoading } = api.chat.getSession.useQuery(
@@ -22,20 +39,20 @@ export function useChatSession(sessionId?: string) {
   const deleteSessionMutation = api.chat.deleteSession.useMutation();
 
   // Combined messages (real + optimistic)
-  const allMessages = [...(messages || []), ...optimisticMessages];
+  const allMessages = [...(messages ?? []), ...optimisticMessages];
 
   const createSession = useCallback(async (title: string) => {
     return await createSessionMutation.mutateAsync({ title });
   }, [createSessionMutation]);
 
-  const sendMessage = useCallback(async (content: string) => {
+  const sendMessage = useCallback(async (content: string): Promise<Message | undefined> => {
     if (!sessionId) return;
 
     // Add optimistic user message
-    const optimisticUserMessage = {
+    const optimisticUserMessage: OptimisticMessage = {
       id: `temp-user-${Date.now()}`,
       content,
-      role: "user" as const,
+      role: "user",
       createdAt: new Date(),
       chatSessionId: sessionId,
     };
@@ -49,12 +66,12 @@ export function useChatSession(sessionId?: string) {
       });
 
       // Remove optimistic message and add real messages
-      setOptimisticMessages(prev => prev.filter(msg => msg.id !== optimisticUserMessage.id));
+      setOptimisticMessages(prev => prev.filter((msg: OptimisticMessage) => msg.id !== optimisticUserMessage.id));
 
       return response;
     } catch (error) {
       // Remove optimistic message on error
-      setOptimisticMessages(prev => prev.filter(msg => msg.id !== optimisticUserMessage.id));
+      setOptimisticMessages(prev => prev.filter((msg: OptimisticMessage) => msg.id !== optimisticUserMessage.id));
       throw error;
     }
   }, [sessionId, sendMessageMutation]);

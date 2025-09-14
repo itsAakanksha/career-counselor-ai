@@ -115,6 +115,109 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* Custom App Colors */
+:root {
+  /* Primary gradient colors */
+  --primary-gradient-start: #2b1055;
+  --primary-gradient-end: #4b1fbf;
+  
+  /* Secondary gradient colors */
+  --secondary-gradient-start: #5b3ce6;
+  --secondary-gradient-end: #8b5cf6;
+  
+  /* Background gradient colors */
+  --bg-gradient-start: #060417;
+  --bg-gradient-via: #0f0720;
+  --bg-gradient-end: #22123a;
+  
+  /* Dark background */
+  --dark-bg: #0c0328;
+  
+  /* Accent colors */
+  --accent-purple: #3b2a6f;
+  --accent-purple-light: #6b4be0;
+}
+
+.dark {
+  /* Dark mode variants if needed */
+  --primary-gradient-start: #2b1055;
+  --primary-gradient-end: #4b1fbf;
+  --secondary-gradient-start: #5b3ce6;
+  --secondary-gradient-end: #8b5cf6;
+  --bg-gradient-start: #060417;
+  --bg-gradient-via: #0f0720;
+  --bg-gradient-end: #22123a;
+  --dark-bg: #0c0328;
+  --accent-purple: #3b2a6f;
+  --accent-purple-light: #6b4be0;
+}
+
+/* Light Theme */
+.light {
+  /* Primary gradient colors - Light theme */
+  --primary-gradient-start: #6366f1;
+  --primary-gradient-end: #8b5cf6;
+  
+  /* Secondary gradient colors - Light theme */
+  --secondary-gradient-start: #3b82f6;
+  --secondary-gradient-end: #6366f1;
+  
+  /* Background gradient colors - Light theme */
+  --bg-gradient-start: #f8fafc;
+  --bg-gradient-via: #f1f5f9;
+  --bg-gradient-end: #e2e8f0;
+  
+  /* Light background */
+  --dark-bg: #ffffff;
+  
+  /* Accent colors - Light theme */
+  --accent-purple: #a78bfa;
+  --accent-purple-light: #c4b5fd;
+
+  /* UI Colors - Light theme */
+  --surface-primary: #ffffff;
+  --surface-secondary: #f8fafc;
+  --surface-tertiary: #f1f5f9;
+  --text-primary: #1e293b;
+  --text-secondary: #475569;
+  --text-tertiary: #64748b;
+  --border-primary: rgba(0, 0, 0, 0.1);
+  --border-secondary: rgba(0, 0, 0, 0.05);
+}
+
+/* Dark Theme (explicit) */
+.dark {
+  /* Primary gradient colors - Dark theme */
+  --primary-gradient-start: #2b1055;
+  --primary-gradient-end: #4b1fbf;
+  
+  /* Secondary gradient colors - Dark theme */
+  --secondary-gradient-start: #5b3ce6;
+  --secondary-gradient-end: #8b5cf6;
+  
+  /* Background gradient colors - Dark theme */
+  --bg-gradient-start: #060417;
+  --bg-gradient-via: #0f0720;
+  --bg-gradient-end: #22123a;
+  
+  /* Dark background */
+  --dark-bg: #0c0328;
+  
+  /* Accent colors - Dark theme */
+  --accent-purple: #3b2a6f;
+  --accent-purple-light: #6b4be0;
+
+  /* UI Colors - Dark theme */
+  --surface-primary: #1a1a2e;
+  --surface-secondary: #16213e;
+  --surface-tertiary: #0f1419;
+  --text-primary: #ffffff;
+  --text-secondary: #b8c5d6;
+  --text-tertiary: #8892a0;
+  --border-primary: rgba(255, 255, 255, 0.1);
+  --border-secondary: rgba(255, 255, 255, 0.05);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
@@ -122,4 +225,13 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Hide scrollbars while maintaining scroll functionality */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* Internet Explorer 10+ */
+  scrollbar-width: none;  /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Safari and Chrome */
 }
