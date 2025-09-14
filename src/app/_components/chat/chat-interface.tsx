@@ -39,7 +39,6 @@ export function ChatInterface({ sessionId, onSessionCreated, sidebarOpen = true 
 
   const handleSendMessage = async (content: string) => {
     if (!sessionId) {
-      // Create new session first
       if (!newSessionTitle.trim()) {
         setNewSessionTitle(`Career Chat `);
       }
@@ -50,7 +49,6 @@ export function ChatInterface({ sessionId, onSessionCreated, sidebarOpen = true 
         });
         onSessionCreated(newSession.id);
 
-        // Now send the message to the new session
         await sendMessage.mutateAsync({
           sessionId: newSession.id,
           content,
@@ -83,7 +81,7 @@ export function ChatInterface({ sessionId, onSessionCreated, sidebarOpen = true 
     return (
       <div className="h-screen flex flex-col  min-h-0 relative">
         <div className="flex-1 overflow-auto bg-gradient-to-br from-[var(--bg-gradient-start)] via-[var(--bg-gradient-via)] to-[var(--bg-gradient-end)]  p-8 pb-32 scrollbar-hide">
-          <div className="w-full max-w-5xl bg-gradient-to-br from-white/4 to-transparent border border-white/6 rounded-3xl shadow-2xl p-8 backdrop-blur-md ">
+          <div className="w-full max-w-5xl ">
             <EmptyState />
           </div>
         </div>
@@ -93,7 +91,7 @@ export function ChatInterface({ sessionId, onSessionCreated, sidebarOpen = true 
         }`}>
           <div className="p-3 sm:p-4 md:p-6">
             <div className="max-w-full sm:max-w-2xl md:max-w-4xl lg:max-w-5xl mx-auto">
-              <div className="bg-gradient-to-r from-white/10 to-white/5 backdrop-blur-md rounded-xl p-3 sm:p-4 shadow-lg border border-white/10">
+              <div className="bg-gradient-to-br from-white/5 to-white/2 border border-[var(--border-primary)] rounded-xl p-3 sm:p-4 shadow-lg ">
                 <MessageInput
                   onSendMessage={handleSendMessage}
                   placeholder="Start a conversation with your career counselor..."
@@ -127,7 +125,7 @@ export function ChatInterface({ sessionId, onSessionCreated, sidebarOpen = true 
       }`}>
         <div className="p-3 sm:p-4 md:p-6">
           <div className="max-w-full sm:max-w-2xl md:max-w-4xl lg:max-w-5xl mx-auto">
-            <div className="bg-gradient-to-br from-white/5 to-white/2 rounded-xl p-3 sm:p-4 shadow-lg border">
+            <div className="bg-gradient-to-br from-white/5 to-white/2 border border-[var(--border-primary)] rounded-xl p-3 sm:p-4 shadow-lg border">
               <MessageInput
                 onSendMessage={handleSendMessage}
                 placeholder="Ask your career counselors anything..."

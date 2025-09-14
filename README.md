@@ -24,8 +24,8 @@ A modern AI-powered career counseling chat application built with Next.js, TypeS
 ### Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/career-counselor-chat.git
-cd career-counselor-chat
+git clone https://github.com/itsAakanksha/career-counselor-ai.git
+cd career-counselor-ai
 ```
 
 ### Install dependencies

@@ -5,8 +5,8 @@ import { SparklesIcon } from "@heroicons/react/24/outline";
 export function EmptyState() {
   return (
     <div className="flex flex-col items-center justify-center h-full p-2 md:p-8">
-      <div className="md:w-20 md:h-20 bg-gradient-to-br from-[var(--primary-gradient-start)] to-[var(--primary-gradient-end)] rounded-2xl flex items-center justify-center mb-6 shadow-lg">
-        <SparklesIcon className="w-10 h-10 text-white" />
+      <div className="md:w-20 md:h-20 rounded-2xl flex items-center justify-center mb-6  ">
+        <SparklesIcon className="w-10 h-10 text-black dark:text-white" />
       </div>
       <h2 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)] mb-4 text-center">
         Welcome to Career Counselor AI
